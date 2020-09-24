@@ -22,8 +22,12 @@ build_script:
     
     if($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode )  }
 artifacts:
-- path: build\src\bsatk.lib
-  name: bsatk_lib
+  - path: build\src\preview_base.dll
+    name: preview_base_dll
+  - path: build\src\preview_base.pdb
+    name: preview_base_pdb
+  - path: build\src\preview_base.lib
+    name: preview_base_lib
 on_success:
   - ps: Set-Location -Path $env:APPVEYOR_BUILD_FOLDER
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
