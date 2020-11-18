@@ -41,10 +41,6 @@ bool PreviewBase::init(IOrganizer *moInfo)
 {
   m_MOInfo = moInfo;
 
-  if (!isActive()) {
-    return true;
-  }
-
   const QStringList& blacklist = m_MOInfo->pluginSetting(name(), "blacklisted_extensions").toString().toLower().split(',');
 
   // set up image reader to be used for all image types qt (the current installation) supports
@@ -81,6 +77,11 @@ QString PreviewBase::name() const
   return "Preview Base";
 }
 
+QString PreviewBase::localizedName() const
+{
+  return tr("Preview Base");
+}
+
 QString PreviewBase::author() const
 {
   return "Tannin";
@@ -94,11 +95,6 @@ QString PreviewBase::description() const
 MOBase::VersionInfo PreviewBase::version() const
 {
   return VersionInfo(1, 1, 0, VersionInfo::RELEASE_FINAL);
-}
-
-bool PreviewBase::isActive() const
-{
-  return m_MOInfo->pluginSetting(name(), "enabled").toBool();
 }
 
 QList<MOBase::PluginSetting> PreviewBase::settings() const
