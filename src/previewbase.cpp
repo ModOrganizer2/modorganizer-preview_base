@@ -26,7 +26,7 @@ along with Base Preview plugin.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTextEdit>
 #include <QtPlugin>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 
 
 using namespace MOBase;
@@ -130,7 +130,7 @@ QWidget *PreviewBase::genImagePreview(const QString &fileName, const QSize&) con
 {
   QLabel *label = new QLabel();
   QPixmap pic = QPixmap(fileName);
-  QSize screenSize = QApplication::desktop()->screenGeometry().size();
+  QSize screenSize = QApplication::primaryScreen()->geometry().size();
   // ensure the output image is no more than 80% of the screen height.
   // If the aspect ratio is higher than that of the screen this would still allow the image to extend
   // beyond the screen but it ensures you can drag the window and close it
