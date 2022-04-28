@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-if(DEFINED DEPENDENCIES_DIR)
-	include(${DEPENDENCIES_DIR}/modorganizer_super/cmake_common/src.cmake)
-else()
-	include(../../cmake_common/src.cmake)
-endif()
+
+add_library(preview_base SHARED)
+mo2_configure_plugin(preview_base WARNINGS OFF)
+mo2_install_target(preview_base)
