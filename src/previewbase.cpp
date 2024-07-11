@@ -44,7 +44,7 @@ bool PreviewBase::init(IOrganizer *moInfo)
   const QStringList& blacklist = m_MOInfo->pluginSetting(name(), "blacklisted_extensions").toString().toLower().split(',');
 
   // set up image reader to be used for all image types qt (the current installation) supports
-  auto imageReader = std::bind(&PreviewBase::genImagePreview, this, std::placeholders::_1, std::placeholders::_2);
+  auto imageReader = std::bind(&PreviewBase::genImagePreview, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 
   foreach(const QByteArray & fileType, QImageReader::supportedImageFormats()) {
     auto strFileType = QString(fileType).toLower();
@@ -56,9 +56,9 @@ bool PreviewBase::init(IOrganizer *moInfo)
     m_PreviewGenerators[strFileType] = imageReader;
   }
 
-  const QStringList supportedTextFormats = { "txt", "ini", "json", "log", "cfg" };
+  const QStringList supportedTextFormats = { "txt", "ini", "json", "log", "cfg", "psc" };
 
-  auto textReader = std::bind(&PreviewBase::genTxtPreview, this, std::placeholders::_1, std::placeholders::_2);
+  auto textReader = std::bind(&PreviewBase::genTxtPreview, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 
   foreach(const QString fileType, supportedTextFormats) {
 
@@ -116,20 +116,31 @@ std::set<QString> PreviewBase::supportedExtensions() const
   return extensions;
 }
 
-QWidget *PreviewBase::genFilePreview(const QString &fileName, const QSize &maxSize) const
+QWidget* PreviewBase::genFilePreview(const QString &fileName, const QSize &maxSize) const
+{
+  return genDataPreview(nullptr, fileName, maxSize);
+}
+
+QWidget* PreviewBase::genDataPreview(const QByteArray& fileData, const QString& fileName,
+    const QSize& maxSize) const
 {
   auto iter = m_PreviewGenerators.find(QFileInfo(fileName).suffix().toLower());
   if (iter != m_PreviewGenerators.end()) {
-    return iter->second(fileName, maxSize);
+    return iter->second(fileName, maxSize, fileData);
   } else {
     return nullptr;
   }
 }
 
-QWidget *PreviewBase::genImagePreview(const QString &fileName, const QSize&) const
+QWidget *PreviewBase::genImagePreview(const QString &fileName, const QSize&, const QByteArray& fileData) const
 {
   QLabel *label = new QLabel();
-  QPixmap pic = QPixmap(fileName);
+  QPixmap pic;
+  if (fileData == nullptr) {
+    pic = QPixmap(fileName);
+  } else {
+    pic.loadFromData(fileData);
+  }
   QSize screenSize = QApplication::primaryScreen()->geometry().size();
   // ensure the output image is no more than 80% of the screen height.
   // If the aspect ratio is higher than that of the screen this would still allow the image to extend
@@ -142,10 +153,14 @@ QWidget *PreviewBase::genImagePreview(const QString &fileName, const QSize&) con
   return label;
 }
 
-QWidget *PreviewBase::genTxtPreview(const QString &fileName, const QSize&) const
+QWidget *PreviewBase::genTxtPreview(const QString &fileName, const QSize&, const QByteArray& fileData) const
 {
   QTextEdit *edit = new QTextEdit();
-  edit->setText(MOBase::readFileText(fileName));
+  if (fileData == nullptr) {
+    edit->setText(MOBase::readFileText(fileName));
+  } else {
+    edit->setText(MOBase::decodeTextData(fileData));
+  }
   edit->setReadOnly(true);
   return edit;
 }
