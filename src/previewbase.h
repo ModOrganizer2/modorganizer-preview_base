@@ -17,19 +17,18 @@ You should have received a copy of the GNU General Public License
 along with Base Preview plugin.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef PREVIEWBASE_H
 #define PREVIEWBASE_H
 
-#include <ipluginpreview.h>
 #include <functional>
+#include <ipluginpreview.h>
 
 class PreviewBase : public MOBase::IPluginPreview
 {
 
   Q_OBJECT
   Q_INTERFACES(MOBase::IPlugin MOBase::IPluginPreview)
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   Q_PLUGIN_METADATA(IID "org.tannin.PreviewBase" FILE "previewbase.json")
 #endif
 
@@ -37,7 +36,7 @@ public:
   PreviewBase();
 
 public:
-  virtual bool init(MOBase::IOrganizer *moInfo) override;
+  virtual bool init(MOBase::IOrganizer* moInfo) override;
   virtual QString name() const override;
   virtual QString localizedName() const override;
   virtual QString author() const override;
@@ -48,19 +47,23 @@ public:
 public:
   virtual std::set<QString> supportedExtensions() const;
   virtual bool supportsArchives() const override { return true; }
-  virtual QWidget* genFilePreview(const QString &fileName, const QSize &maxSize) const;
+  virtual QWidget* genFilePreview(const QString& fileName, const QSize& maxSize) const;
   virtual QWidget* genDataPreview(const QByteArray& fileData, const QString& fileName,
-      const QSize& maxSize) const override;
+                                  const QSize& maxSize) const override;
 
 private:
-  QWidget *genImagePreview(const QString &fileName, const QSize &maxSize, const QByteArray& fileData) const;
-  QWidget* genTxtPreview(const QString& fileName, const QSize& maxSize, const QByteArray& fileData) const;
+  QWidget* genImagePreview(const QString& fileName, const QSize& maxSize,
+                           const QByteArray& fileData) const;
+  QWidget* genTxtPreview(const QString& fileName, const QSize& maxSize,
+                         const QByteArray& fileData) const;
 
 private:
-  std::map<QString, std::function<QWidget*(const QString&, const QSize&, const QByteArray&)> > m_PreviewGenerators;
+  std::map<QString,
+           std::function<QWidget*(const QString&, const QSize&, const QByteArray&)>>
+      m_PreviewGenerators;
 
 private:
   const MOBase::IOrganizer* m_MOInfo;
 };
 
-#endif // PREVIEWBASE_H
+#endif  // PREVIEWBASE_H
