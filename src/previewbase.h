@@ -47,15 +47,17 @@ public:
 
 public:
   virtual std::set<QString> supportedExtensions() const;
-  virtual QWidget *genFilePreview(const QString &fileName, const QSize &maxSize) const;
+  virtual bool supportsArchives() const override { return true; }
+  virtual QWidget* genFilePreview(const QString &fileName, const QSize &maxSize) const;
+  virtual QWidget* genDataPreview(const QByteArray& fileData, const QString& fileName,
+      const QSize& maxSize) const override;
 
 private:
-
-  QWidget *genImagePreview(const QString &fileName, const QSize &maxSize) const;
-  QWidget *genTxtPreview(const QString &fileName, const QSize &maxSize) const;
+  QWidget *genImagePreview(const QString &fileName, const QSize &maxSize, const QByteArray& fileData) const;
+  QWidget* genTxtPreview(const QString& fileName, const QSize& maxSize, const QByteArray& fileData) const;
 
 private:
-  std::map<QString, std::function<QWidget*(const QString&, const QSize&)> > m_PreviewGenerators;
+  std::map<QString, std::function<QWidget*(const QString&, const QSize&, const QByteArray&)> > m_PreviewGenerators;
 
 private:
   const MOBase::IOrganizer* m_MOInfo;
