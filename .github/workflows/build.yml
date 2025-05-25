@@ -13,8 +13,8 @@ jobs:
   build:
     runs-on: windows-2022
     steps:
-      - name: Build ModOrganizer
-        id: build-modorganizer
+      - name: Build Preview Base
+        id: build-preview-base
         uses: ModOrganizer2/build-with-mob-action@dev/vcpkg
         with:
           mo2-dependencies: uibase
