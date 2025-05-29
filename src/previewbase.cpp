@@ -18,6 +18,7 @@ along with Base Preview plugin.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "previewbase.h"
+
 #include <QApplication>
 #include <QFileInfo>
 #include <QImageReader>
@@ -25,7 +26,8 @@ along with Base Preview plugin.  If not, see <http://www.gnu.org/licenses/>.
 #include <QScreen>
 #include <QTextEdit>
 #include <QtPlugin>
-#include <utility.h>
+
+#include <uibase/utility.h>
 
 using namespace MOBase;
 

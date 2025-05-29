@@ -21,16 +21,15 @@ along with Base Preview plugin.  If not, see <http://www.gnu.org/licenses/>.
 #define PREVIEWBASE_H
 
 #include <functional>
-#include <ipluginpreview.h>
+
+#include <uibase/ipluginpreview.h>
 
 class PreviewBase : public MOBase::IPluginPreview
 {
 
   Q_OBJECT
   Q_INTERFACES(MOBase::IPlugin MOBase::IPluginPreview)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  Q_PLUGIN_METADATA(IID "org.tannin.PreviewBase" FILE "previewbase.json")
-#endif
+  Q_PLUGIN_METADATA(IID "org.tannin.PreviewBase")
 
 public:
   PreviewBase();
